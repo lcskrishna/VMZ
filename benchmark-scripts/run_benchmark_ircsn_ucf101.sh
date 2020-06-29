@@ -1,5 +1,7 @@
 #!/bin/bash
 
+mkdir -p results
+
 BATCH_SIZE=${BATCH_SIZE:-4}
 GPUS=${GPUS:-0}
 NUM_EPOCHS=${NUM_EPOCHS:-10}
@@ -13,5 +15,8 @@ python3.6 tools/train_net.py \
 --jitter_scale="112,112" \
 --gpus=0 --base_learning_rate=0.0025 \
 --epoch_size=10 --num_epochs=$NUM_EPOCHS --step_epoch=1 \
---weight_decay=0.005 --num_labels=101 --use_local_file=0
+--weight_decay=0.005 --num_labels=101 --use_local_file=0 2>&1 | tee results/log.txt
+
+python3.6 benchmark-scripts/get_benchmark_results.py --log-file results/log.txt
+
 
